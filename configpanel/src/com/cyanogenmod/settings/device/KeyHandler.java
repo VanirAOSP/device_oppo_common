@@ -13,6 +13,7 @@ import android.media.IAudioService;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
@@ -54,6 +55,7 @@ public class KeyHandler implements DeviceKeyHandler {
     private EventHandler mEventHandler;
     private SensorManager mSensorManager;
     private Sensor mProximitySensor;
+    WakeLock mProximityWakeLock;
 
     public KeyHandler(Context context) {
         mContext = context;
@@ -61,6 +63,8 @@ public class KeyHandler implements DeviceKeyHandler {
         mEventHandler = new EventHandler();
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mProximitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        mProximityWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "ProximityWakeLock");
     }
 
     private void ensureKeyguardManager() {
@@ -98,11 +102,6 @@ public class KeyHandler implements DeviceKeyHandler {
             case GESTURE_GTR_SCANCODE:
                 dispatchMediaKeyWithWakeLockToAudioService(KeyEvent.KEYCODE_MEDIA_NEXT);
                 break;
-            case KEY_DOUBLE_TAP:
-                if (!mPowerManager.isScreenOn()) {
-                    mPowerManager.wakeUp(SystemClock.uptimeMillis());
-                }
-                break;
             }
         }
     }
@@ -113,6 +112,10 @@ public class KeyHandler implements DeviceKeyHandler {
         }
         boolean isKeySupported = ArrayUtils.contains(sSupportedGestures, event.getScanCode());
         if (isKeySupported && !mEventHandler.hasMessages(GESTURE_REQUEST)) {
+            if (event.getScanCode() == KEY_DOUBLE_TAP && !mPowerManager.isScreenOn()) {
+                mPowerManager.wakeUpWithProximityCheck(SystemClock.uptimeMillis());
+                return true;
+            }
             Message msg = getMessageForKeyEvent(event);
             if (mProximitySensor != null) {
                 mEventHandler.sendMessageDelayed(msg, 200);
@@ -131,10 +134,12 @@ public class KeyHandler implements DeviceKeyHandler {
     }
 
     private void processEvent(final KeyEvent keyEvent) {
+        mProximityWakeLock.acquire();
         mSensorManager.registerListener(new SensorEventListener() {
-
             @Override
             public void onSensorChanged(SensorEvent event) {
+                mProximityWakeLock.release();
+                mSensorManager.unregisterListener(this);
                 if (!mEventHandler.hasMessages(GESTURE_REQUEST)) {
                     // The sensor took to long, ignoring.
                     return;
@@ -144,7 +149,6 @@ public class KeyHandler implements DeviceKeyHandler {
                     Message msg = getMessageForKeyEvent(keyEvent);
                     mEventHandler.sendMessage(msg);
                 }
-                mSensorManager.unregisterListener(this);
             }
 
             @Override
