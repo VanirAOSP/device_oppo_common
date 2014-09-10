@@ -40,6 +40,8 @@ public class KeyHandler implements DeviceKeyHandler {
     private static final int GESTURE_GTR_SCANCODE = 254;
     private static final int KEY_DOUBLE_TAP = 255;
 
+    private static final int GESTURE_WAKELOCK_DURATION = 3000;
+
     private static final int[] sSupportedGestures = new int[]{
         FLIP_CAMERA_SCANCODE,
         GESTURE_CIRCLE_SCANCODE,
@@ -56,6 +58,7 @@ public class KeyHandler implements DeviceKeyHandler {
     private SensorManager mSensorManager;
     private Sensor mProximitySensor;
     WakeLock mProximityWakeLock;
+    WakeLock mGestureWakeLock;
 
     public KeyHandler(Context context) {
         mContext = context;
@@ -65,6 +68,8 @@ public class KeyHandler implements DeviceKeyHandler {
         mProximitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mProximityWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "ProximityWakeLock");
+        mGestureWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "GestureWakeLock");
     }
 
     private void ensureKeyguardManager() {
@@ -90,6 +95,7 @@ public class KeyHandler implements DeviceKeyHandler {
                 } else {
                     action = MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA;
                 }
+                mGestureWakeLock.acquire(GESTURE_WAKELOCK_DURATION);
                 Intent intent = new Intent(action, null);
                 startActivitySafely(intent);
                 break;
