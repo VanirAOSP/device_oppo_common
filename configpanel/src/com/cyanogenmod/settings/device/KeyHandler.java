@@ -5,6 +5,7 @@ import android.app.KeyguardManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -35,7 +36,7 @@ public class KeyHandler implements DeviceKeyHandler {
     private static final int FLIP_CAMERA_SCANCODE = 249;
     private static final int GESTURE_CIRCLE_SCANCODE = 250;
     private static final int GESTURE_SWIPE_DOWN_SCANCODE = 251;
-//    private static final int GESTURE_V_SCANCODE = 252;
+    private static final int GESTURE_V_SCANCODE = 252;
     private static final int GESTURE_LTR_SCANCODE = 253;
     private static final int GESTURE_GTR_SCANCODE = 254;
     private static final int KEY_DOUBLE_TAP = 255;
@@ -46,6 +47,7 @@ public class KeyHandler implements DeviceKeyHandler {
         FLIP_CAMERA_SCANCODE,
         GESTURE_CIRCLE_SCANCODE,
         GESTURE_SWIPE_DOWN_SCANCODE,
+        GESTURE_V_SCANCODE,
         GESTURE_LTR_SCANCODE,
         GESTURE_GTR_SCANCODE,
         KEY_DOUBLE_TAP
@@ -101,6 +103,21 @@ public class KeyHandler implements DeviceKeyHandler {
                 break;
             case GESTURE_SWIPE_DOWN_SCANCODE:
                 dispatchMediaKeyWithWakeLockToAudioService(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+                break;
+            case GESTURE_V_SCANCODE:
+                boolean hastorch = false;
+                final PackageManager pm = mContext.getPackageManager();
+                try {
+                    hastorch = pm.getPackageInfo(TorchConstants.APP_PACKAGE_NAME, 0) != null;
+                } catch (PackageManager.NameNotFoundException e) {
+                    // Ignored, just catched so we can return false below
+                }
+                if (hastorch) {
+                    mGestureWakeLock.acquire(GESTURE_WAKELOCK_DURATION);
+                    Intent torchIntent = new Intent(TorchConstants.ACTION_TOGGLE_STATE);
+                    torchIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+                    mContext.sendBroadcast(torchIntent);
+                }
                 break;
             case GESTURE_LTR_SCANCODE:
                 dispatchMediaKeyWithWakeLockToAudioService(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
