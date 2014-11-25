@@ -5,7 +5,6 @@ import android.app.KeyguardManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -25,6 +24,7 @@ import android.view.KeyEvent;
 
 import com.android.internal.os.DeviceKeyHandler;
 import com.android.internal.util.ArrayUtils;
+//import com.android.internal.util.cm.NavigationRingHelpers;
 //import com.android.internal.util.cm.TorchConstants;
 
 public class KeyHandler implements DeviceKeyHandler {
@@ -106,14 +106,7 @@ public class KeyHandler implements DeviceKeyHandler {
                 break;
                 /*
             case GESTURE_V_SCANCODE:
-                boolean hastorch = false;
-                final PackageManager pm = mContext.getPackageManager();
-                try {
-                    hastorch = pm.getPackageInfo(TorchConstants.APP_PACKAGE_NAME, 0) != null;
-                } catch (PackageManager.NameNotFoundException e) {
-                    // Ignored, just catched so we can return false below
-                }
-                if (hastorch) {
+                if (NavigationRingHelpers.isTorchAvailable(mContext)) {
                     mGestureWakeLock.acquire(GESTURE_WAKELOCK_DURATION);
                     Intent torchIntent = new Intent(TorchConstants.ACTION_TOGGLE_STATE);
                     torchIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
