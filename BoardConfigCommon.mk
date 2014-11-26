@@ -27,3 +27,5 @@ TARGET_POWERHAL_VARIANT := qcom
 
 # Releasetools
 TARGET_RELEASETOOLS_EXTENSIONS := device/oppo/common
+
+-include device/qcom/sepolicy/sepolicy.mk
