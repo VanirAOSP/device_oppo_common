@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2015 The CyanogenMod Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.cyanogenmod.settings.device.utils;
 
 import java.util.HashMap;
@@ -22,7 +38,8 @@ public class Constants {
     public static final String OCLICK_DISCONNECT_ALERT_KEY = "oclick_disconnect_alert";
     public static final String TOUCHSCREEN_CAMERA_GESTURE_KEY = "touchscreen_gesture_camera";
     public static final String TOUCHSCREEN_MUSIC_GESTURE_KEY = "touchscreen_gesture_music";
-    public static final String TOUCHSCREEN_FLASHLIGHT_GESTURE_KEY = "touchscreen_gesture_flashlight";
+    public static final String TOUCHSCREEN_FLASHLIGHT_GESTURE_KEY =
+            "touchscreen_gesture_flashlight";
 
     // Proc nodes
     public static final String TOUCH_PAD_NODE = "/proc/touchpad/enable";
