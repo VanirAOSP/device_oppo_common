@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2015 The CyanogenMod Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.cyanogenmod.settings.device;
 
 import android.app.ActivityManagerNative;
@@ -43,7 +59,7 @@ public class KeyHandler implements DeviceKeyHandler {
 
     private static final int GESTURE_WAKELOCK_DURATION = 3000;
 
-    private static final int[] sSupportedGestures = new int[]{
+    private static final int[] sSupportedGestures = new int[] {
         FLIP_CAMERA_SCANCODE,
         GESTURE_CIRCLE_SCANCODE,
         GESTURE_SWIPE_DOWN_SCANCODE,
@@ -76,7 +92,8 @@ public class KeyHandler implements DeviceKeyHandler {
 
     private void ensureKeyguardManager() {
         if (mKeyguardManager == null) {
-            mKeyguardManager = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
+            mKeyguardManager =
+                    (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         }
     }
 
@@ -84,7 +101,7 @@ public class KeyHandler implements DeviceKeyHandler {
         @Override
         public void handleMessage(Message msg) {
             KeyEvent event = (KeyEvent) msg.obj;
-            switch(event.getScanCode()) {
+            switch (event.getScanCode()) {
             case FLIP_CAMERA_SCANCODE:
                 if (event.getAction() == KeyEvent.ACTION_UP) {
                     break;
@@ -125,7 +142,8 @@ public class KeyHandler implements DeviceKeyHandler {
     }
 
     public boolean handleKeyEvent(KeyEvent event) {
-        if (event.getAction() != KeyEvent.ACTION_UP && event.getScanCode() != FLIP_CAMERA_SCANCODE) {
+        if (event.getAction() != KeyEvent.ACTION_UP
+                && event.getScanCode() != FLIP_CAMERA_SCANCODE) {
             return false;
         }
         boolean isKeySupported = ArrayUtils.contains(sSupportedGestures, event.getScanCode());
