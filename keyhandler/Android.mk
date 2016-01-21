@@ -1,3 +1,6 @@
+ifeq ($(filter oneplus2,$(TARGET_DEVICE)),)
+
+
 LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -9,3 +12,4 @@ LOCAL_DEX_PREOPT := false
 LOCAL_STATIC_JAVA_LIBRARIES := org.cyanogenmod.platform.internal
 include $(BUILD_JAVA_LIBRARY)
 
+endif #Filter
