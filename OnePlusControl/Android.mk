@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014 The CyanogenMod Project
+# Copyright (C) 2016 The CyanogenMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,22 +14,15 @@
 # limitations under the License.
 #
 
-# overlays
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+LOCAL_PATH := $(call my-dir)
 
-# Keyhandler
-PRODUCT_PACKAGES += \
-    ConfigPanel \
-    com.cyanogenmod.keyhandler
+include $(CLEAR_VARS)
 
-PRODUCT_PACKAGES += \
-    OnePlusControl
+LOCAL_SRC_FILES := $(call all-java-files-under, src)
+LOCAL_CERTIFICATE := platform
+LOCAL_PACKAGE_NAME := OnePlusControl
 
-PRODUCT_SYSTEM_SERVER_JARS += com.cyanogenmod.keyhandler
+LOCAL_STATIC_JAVA_LIBRARIES := \
+    org.cyanogenmod.platform.internal
 
-# never dexopt the keyhandler
-$(call add-product-dex-preopt-module-config,com.cyanogenmod.keyhandler,disable)
-
-# Recovery
-PRODUCT_PACKAGES += \
-    librecovery_updater_oppo
+include $(BUILD_PACKAGE)
