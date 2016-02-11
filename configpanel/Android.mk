@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 
-ifeq ($(filter oneplus2,$(TARGET_DEVICE)),)
-
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -27,5 +25,3 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
     org.cyanogenmod.platform.internal
 
 include $(BUILD_PACKAGE)
-
-endif #Filter

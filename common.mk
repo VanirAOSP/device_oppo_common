@@ -22,9 +22,6 @@ PRODUCT_PACKAGES += \
     ConfigPanel \
     com.cyanogenmod.keyhandler
 
-PRODUCT_PACKAGES += \
-    OnePlusControl
-
 PRODUCT_SYSTEM_SERVER_JARS += com.cyanogenmod.keyhandler
 
 # never dexopt the keyhandler
